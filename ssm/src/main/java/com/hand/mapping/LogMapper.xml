@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.dao.LogMapper" >
+    <resultMap id="BaseResultMap" type="com.hand.model.Log" >
+        <id column="LOG_ID" property="logId" jdbcType="DECIMAL" />
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="FUN" property="fun" jdbcType="VARCHAR" />
+        <result column="LOG_DESCRIPTION" property="logDescription" jdbcType="VARCHAR" />
+        <result column="OPERATION_TIME" property="operationTime" jdbcType="TIMESTAMP" />
+        <result column="PARAMS" property="params" jdbcType="VARCHAR" />
+        <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
+        <result column="OPERATION_TIMES" property="operationTimes" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <resultMap id="BaseResultMapVo" type="com.hand.dto.LogDto" >
+        <result column="LOG_ID" property="logId" jdbcType="DECIMAL" />
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="FUN" property="fun" jdbcType="VARCHAR" />
+        <result column="LOG_DESCRIPTION" property="logDescription" jdbcType="VARCHAR" />
+        <result column="OPERATION_TIME" property="operationTime" jdbcType="TIMESTAMP" />
+        <result column="PARAMS" property="params" jdbcType="VARCHAR" />
+        <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
+        <result column="OPERATION_TIMES" property="operationTimes" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        LOG_ID,USER_ID,USER_NAME,FUN,LOG_DESCRIPTION,OPERATION_TIME,PARAMS,IP_ADDRESS,OPERATION_TIMES
+    </sql>
+
+    <insert id="save" parameterType="com.hand.model.Log">
+        INSERT INTO LOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                USER_ID,
+            </if>
+            <if test="fun != null" >
+                FUN,
+            </if>
+            <if test="logDescription != null" >
+                LOG_DESCRIPTION,
+            </if>
+            <if test="operationTime != null" >
+                OPERATION_TIME,
+            </if>
+            <if test="params != null" >
+                PARAMS,
+            </if>
+            <if test="ipAddress != null" >
+                IP_ADDRESS,
+            </if>
+            <if test="operationTimes != null" >
+                OPERATION_TIMES
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                #{userId,jdbcType=DECIMAL},
+            </if>
+            <if test="fun != null" >
+                #{fun, jdbcType=VARCHAR},
+            </if>
+            <if test="logDescription != null" >
+                #{logDescription, jdbcType=VARCHAR},
+            </if>
+            <if test="operationTime != null" >
+                #{operationTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="params != null" >
+                #{params, jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddress != null" >
+                #{ipAddress, jdbcType=VARCHAR},
+            </if>
+            <if test="operationTimes != null" >
+                #{operationTimes,jdbcType=DECIMAL}
+            </if>
+        </trim>
+    </insert>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+      DELETE FROM LOG WHERE LOG_ID = #{1}
+    </delete>
+
+    <select id="queryLogs" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+        SELECT L.LOG_ID,
+        U.USER_NAME,
+        L.USER_ID,
+        L.FUN,
+        L.LOG_DESCRIPTION,
+        L.OPERATION_TIME,
+        L.PARAMS,
+        L.IP_ADDRESS,
+        L.OPERATION_TIMES
+        FROM USER U, LOG L
+        <if test="_parameter != null">
+          <where>
+              <trim prefix="(" prefixOverrides="AND" suffix=")">
+                  <if test="userName != null">
+                      <if test="userName != ''">
+                        AND UPPER(U.USER_NAME) LIKE CONCAT(CONCAT('%', UPPER(#{userName,jdbcType=VARCHAR})),'%')
+                      </if>
+                  </if>
+                  <if test="operationTimeStart != null or operationTimeEnd != null">
+                      AND L.OPERATION_TIME &gt; #{operationTimeStart,jdbcType=TIMESTAMP}
+                      AND L.OPERATION_TIME &lt; #{operationTimeEnd,jdbcType=TIMESTAMP}
+                  </if>
+              </trim>
+              AND L.USER_ID = U.USER_ID
+          </where>
+        </if>
+        ORDER BY L.OPERATION_TIME DESC
+    </select>
+    
+</mapper>

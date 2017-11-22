@@ -1,0 +1,7 @@
+body{font-size: 12px; font-family: "Microsoft Yahei, Helvetica Neue", Helvetica, Arial, sans-serif;}
+#head-div{width: 100%; height: 48px; line-height: 48px; padding-left: 6.5%; background-color: #b01717; color: #ffffff;}
+.footer {position: absolute; width: 100%; bottom: 0px; height: 56px;}
+.foot-div{width: 100%; height: 56px; line-height: 56px; background-color: #424242; color:#fff; text-align:center;}
+#head-div ul{list-style: none; margin-top: -10px;}
+#head-div ul li{float: left; width: 100px; text-align: center; height: 48px; cursor: pointer;}
+#head-div ul li:hover{float: left; width: 100px; text-align: center; height: 48px; background-color: #000; cursor: pointer;}

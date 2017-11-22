@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.dao.UserMapper" >
+    <resultMap id="BaseResultMap" type="com.hand.model.User" >
+        <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+        <result column="USER_SEX" property="userSex" jdbcType="CHAR" />
+        <result column="USER_MAIL" property="userMail" jdbcType="VARCHAR" />
+        <!--<result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />-->
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="TINYINT" />
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <resultMap id="BaseResultVo" type="com.hand.dto.UserDto" >
+        <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+        <result column="USER_SEX" property="userSex" jdbcType="CHAR" />
+        <result column="USER_MAIL" property="userMail" jdbcType="VARCHAR" />
+        <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="TINYINT" />
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        USER_ID,USER_NAME,PASSWORD,USER_SEX,USER_MAIL,ENABLED_FLAG,CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATE_DATE
+    </sql>
+
+    <insert id="save" parameterType="com.hand.model.User">
+        INSERT INTO USER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userName != null" >
+                USER_NAME,
+            </if>
+            <if test="password != null" >
+                PASSWORD,
+            </if>
+            <if test="userSex != null" >
+                USER_SEX,
+            </if>
+            <if test="userMail != null" >
+                USER_MAIL,
+            </if>
+            <!--<if test="roleId != null" >ROLE_ID,</if>-->
+            <if test="enabledFlag != null" >
+                ENABLED_FLAG,
+            </if>
+            <if test="createdBy != null" >
+                CREATED_BY,
+            </if>
+            <if test="creationDate != null" >
+                CREATION_DATE,
+            </if>
+            <if test="lastUpdatedBy != null" >
+                LAST_UPDATED_BY,
+            </if>
+            <if test="lastUpdateDate != null" >
+                LAST_UPDATE_DATE
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userName != null" >
+                #{userName, jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password, jdbcType=VARCHAR},
+            </if>
+            <if test="userSex != null" >
+                #{userSex, jdbcType=CHAR},
+            </if>
+            <if test="userMail != null" >
+                #{userMail, jdbcType=VARCHAR},
+            </if>
+            <!--<if test="roleId != null" >#{roleId,jdbcType=DECIMAL},</if>-->
+            <if test="enabledFlag != null" >
+                #{enabledFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createdBy != null" >
+                #{createdBy,jdbcType=DECIMAL},
+            </if>
+            <if test="creationDate != null" >
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdatedBy != null" >
+                #{lastUpdatedBy,jdbcType=DECIMAL},
+            </if>
+            <if test="lastUpdateDate != null" >
+                #{lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+      DELETE FROM USER WHERE USER_ID = #{1}
+    </delete>
+
+    <update id="update" parameterType="com.hand.model.User">
+      UPDATE USER
+      <set>
+          <if test="userName != null and userName != ''">
+              USER_NAME = #{userName, jdbcType=VARCHAR},
+          </if>
+          <if test="password != null and password != ''">
+              PASSWORD = #{password, jdbcType=VARCHAR},
+          </if>
+          <if test="userSex != null and userSex != ''">
+              USER_SEX = #{userSex, jdbcType=CHAR},
+          </if>
+          <if test="userMail != null and userMail != ''">
+              USER_MAIL = #{userMail, jdbcType=VARCHAR},
+          </if>
+          <!--<if test="roleId != null" >#{roleId,jdbcType=DECIMAL},</if>-->
+          <if test="enabledFlag != null" >
+              #{enabledFlag,jdbcType=TINYINT},
+          </if>
+          <if test="createdBy != null and createdBy != 0 " >
+              CREATED_BY = #{createdBy,jdbcType=DECIMAL},
+          </if>
+          <if test="creationDate != null" >
+              CREATION_DATE = #{creationDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="lastUpdatedBy != null  and lastUpdatedBy != 0 " >
+              LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=DECIMAL},
+          </if>
+          <if test="lastUpdateDate != null" >
+              LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP}
+          </if>
+      </set>
+        WHERE USER_ID = #{userId, jdbcType=DECIMAL}
+    </update>
+
+    <select id="findOneById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM USER WHERE USER_ID = #{1}
+    </select>
+
+    <select id="findOneByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM USER WHERE USER_NAME = #{1}
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+            U.USER_ID,
+            U.USER_NAME,
+            U.PASSWORD,
+            U.USER_SEX,
+            U.USER_MAIL,
+            U.ENABLED_FLAG,
+            U.CREATED_BY,
+            U.CREATION_DATE,
+            U.LAST_UPDATED_BY,
+            U.LAST_UPDATE_DATE
+        FROM USER U
+        <if test="_parameter != null">
+          <where>
+              <trim prefix="(" prefixOverrides="or" suffix=")">
+                  <if test="userName != null">
+                      <if test="userName != ''">
+                        or UPPER(U.USER_NAME) LIKE CONCAT(CONCAT('%', UPPER(#{userName,jdbcType=VARCHAR})),'%')
+                      </if>
+                  </if>
+                  <if test="userSex != null">
+                      <if test="userSex != ''">
+                          or UPPER(U.USER_SEX) LIKE CONCAT(CONCAT('%', UPPER(#{userSex,jdbcType=CHAR})),'%')
+                      </if>
+                  </if>
+                  <if test="userMail != null">
+                      <if test="userMail != ''">
+                          or UPPER(U.USER_MAIL) LIKE CONCAT(CONCAT('%', UPPER(#{userMail,jdbcType=VARCHAR})),'%')
+                      </if>
+                  </if>
+                 <!-- <if test="roleName != null">
+                      <if test="roleName != ''">
+                          or UPPER(R.ROLE_NAME) LIKE CONCAT(CONCAT('%', UPPER(#{roleName,jdbcType=VARCHAR})),'%')
+                      </if>
+                  </if>-->
+                  <if test="enabledFlag != null">
+                      OR UPPER(U.ENABLED_FLAG) = #{enabledFlag,jdbcType=VARCHAR}
+                  </if>
+              </trim>
+          </where>
+        </if>
+        ORDER BY U.LAST_UPDATE_DATE DESC
+    </select>
+
+  <!-- , ROLE R, USER_ROLE UR AND UR.USER_ID = U.USER_ID
+    AND UR.ROLE_ID = R.ROLE_ID-->
+</mapper>

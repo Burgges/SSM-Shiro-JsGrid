@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hand.dao.RoleMapper" >
+    <resultMap id="BaseResultMap" type="com.hand.model.Role" >
+        <id column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+        <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+        <result column="ROLE_DESCRIPTION" property="roleDescription" jdbcType="VARCHAR" />
+        <!--<result column="AUTHORITY_CODE" property="authorityCode" jdbcType="VARCHAR" />-->
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="TINYINT" />
+        <result column="CREATED_BY" property="createdBy" jdbcType="DECIMAL" />
+        <result column="CREATION_DATE" property="creationDate" jdbcType="TIMESTAMP" />
+        <result column="LAST_UPDATED_BY" property="lastUpdatedBy" jdbcType="DECIMAL" />
+        <result column="LAST_UPDATE_DATE" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ROLE_ID,ROLE_NAME,ROLE_DESCRIPTION, ENABLED_FLAG, CREATED_BY,CREATION_DATE,LAST_UPDATED_BY,LAST_UPDATE_DATE
+    </sql>
+
+    <insert id="save" parameterType="com.hand.model.Role">
+        INSERT INTO ROLE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="roleName != null" >
+                ROLE_NAME,
+            </if>
+            <if test="roleDescription != null" >
+                ROLE_DESCRIPTION,
+            </if>
+          <!--  <if test="authorityCode != null" >
+                AUTHORITY_CODE,
+            </if>-->
+            <if test="enabledFlag != null" >
+                ENABLED_FLAG,
+            </if>
+            <if test="createdBy != null" >
+                CREATED_BY,
+            </if>
+            <if test="creationDate != null" >
+                CREATION_DATE,
+            </if>
+            <if test="lastUpdatedBy != null" >
+                LAST_UPDATED_BY,
+            </if>
+            <if test="lastUpdateDate != null" >
+                LAST_UPDATE_DATE
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="roleName != null" >
+                #{roleName, jdbcType=VARCHAR},
+            </if>
+            <if test="roleDescription != null" >
+                #{roleDescription, jdbcType=VARCHAR},
+            </if>
+           <!-- <if test="authorityCode != null" >
+                #{authorityCode, jdbcType=VARCHAR},
+            </if>-->
+            <if test="enabledFlag != null" >
+                #{enabledFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createdBy != null" >
+                #{createdBy,jdbcType=DECIMAL},
+            </if>
+            <if test="creationDate != null" >
+                #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdatedBy != null" >
+                #{lastUpdatedBy,jdbcType=DECIMAL},
+            </if>
+            <if test="lastUpdateDate != null" >
+                #{lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+      DELETE FROM ROLE WHERE ROLE_ID = #{1}
+    </delete>
+
+    <update id="update" parameterType="com.hand.model.Role">
+        UPDATE ROLE
+        <set>
+            <if test="roleName != null and roleName !=''" >
+                ROLE_NAME = #{roleName, jdbcType=VARCHAR},
+            </if>
+            <if test="roleDescription != null and roleDescription !=''" >
+                ROLE_DESCRIPTION = #{roleDescription, jdbcType=VARCHAR},
+            </if>
+            <!--<if test="authorityCode != null and authorityCode !=''" >
+                AUTHORITY_CODE = #{authorityCode, jdbcType=VARCHAR},
+            </if>-->
+            <if test="enabledFlag != null" >
+                ENABLED_FLAG = #{enabledFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createdBy != null" >
+                CREATED_BY = #{createdBy,jdbcType=DECIMAL},
+            </if>
+            <if test="creationDate != null" >
+                CREATION_DATE = #{creationDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdatedBy != null" >
+                LAST_UPDATED_BY = #{lastUpdatedBy,jdbcType=DECIMAL},
+            </if>
+            <if test="lastUpdateDate != null" >
+                LAST_UPDATE_DATE = #{lastUpdateDate,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        WHERE ROLE_ID = #{roleId, jdbcType=DECIMAL}
+    </update>
+
+    <select id="getRoleById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM ROLE WHERE ROLE_ID = #{1}
+    </select>
+
+    <select id="getRoleByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> FROM ROLE WHERE ROLE_NAME = #{1}
+    </select>
+
+    <select id="selectRole" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM ROLE R
+        <if test="_parameter != null">
+          <where>
+              <trim prefix="(" prefixOverrides="AND" suffix=")">
+                  <if test="roleName != null">
+                      <if test="roleName != ''">
+                        AND UPPER(R.ROLE_NAME) LIKE CONCAT(CONCAT('%', UPPER(#{roleName,jdbcType=VARCHAR})),'%')
+                      </if>
+                  </if>
+              </trim>
+          </where>
+        </if>
+        ORDER BY R.LAST_UPDATE_DATE DESC
+    </select>
+    
+</mapper>
