@@ -263,7 +263,7 @@ public class UserController {
     @RequestMapping(value = "/testInfo2", method = RequestMethod.POST)
     @ResponseBody
     public Object submitTest (String username, String password) {
-        LOGGER.info(username + "===-====" + password);
+        LOGGER.info(username + "===-===" + password);
         return "success";
     }
 }
